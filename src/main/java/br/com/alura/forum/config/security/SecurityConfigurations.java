@@ -20,6 +20,14 @@ import br.com.alura.forum.repository.UsuarioRepository;
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
+	private static final String AUTH = "/auth";
+
+	private static final String TOPICOSBARRA = "/topicos/*";
+
+	private static final String TOPICOS = "/topicos";
+
+	private static final String MODERADOR = "MODERADOR";
+
 	private static final String SWAGGER_RESOURCES = "/swagger-resources/**";
 
 	private static final String CONFIGURATION = "/configuration/**";
@@ -55,9 +63,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers(HttpMethod.GET, "/topicos").permitAll()
-		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
-		.antMatchers(HttpMethod.POST, "/auth").permitAll()
+		.antMatchers(HttpMethod.GET, TOPICOS).permitAll()
+		.antMatchers(HttpMethod.GET, TOPICOSBARRA).permitAll()
+		.antMatchers(HttpMethod.POST, AUTH).permitAll()
+		.antMatchers(HttpMethod.DELETE, TOPICOSBARRA).hasRole(MODERADOR)
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
